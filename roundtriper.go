@@ -28,10 +28,11 @@ type CacheHandler struct {
 	DefaultRoundTripper http.RoundTripper
 	CacheInteractor     cache.ICacheInteractor
 	ComplyRFC           bool
+	IsPrivateCache      bool
 }
 
 // NewCacheHandlerRoundtrip will create an implementations of cache http roundtripper
-func NewCacheHandlerRoundtrip(defaultRoundTripper http.RoundTripper, rfcCompliance bool, cacheActor cache.ICacheInteractor) *CacheHandler {
+func NewCacheHandlerRoundtrip(defaultRoundTripper http.RoundTripper, rfcCompliance, isPrivateCache bool, cacheActor cache.ICacheInteractor) *CacheHandler {
 	if cacheActor == nil {
 		log.Fatal("cache storage is not well set")
 	}
@@ -39,10 +40,11 @@ func NewCacheHandlerRoundtrip(defaultRoundTripper http.RoundTripper, rfcComplian
 		DefaultRoundTripper: defaultRoundTripper,
 		CacheInteractor:     cacheActor,
 		ComplyRFC:           rfcCompliance,
+		IsPrivateCache:      isPrivateCache,
 	}
 }
 
-func validateTheCacheControl(req *http.Request, resp *http.Response) (validationResult cacheControl.ObjectResults, err error) {
+func validateTheCacheControl(req *http.Request, resp *http.Response, isPrivateCache bool) (validationResult cacheControl.ObjectResults, err error) {
 	reqDir, err := cacheControl.ParseRequestCacheControl(req.Header.Get("Cache-Control"))
 	if err != nil {
 		return
@@ -74,6 +76,7 @@ func validateTheCacheControl(req *http.Request, resp *http.Response) (validation
 	}
 
 	obj := cacheControl.Object{
+		CacheIsPrivate:         isPrivateCache,
 		RespDirectives:         resDir,
 		RespHeaders:            resp.Header,
 		RespStatusCode:         resp.StatusCode,
@@ -96,7 +99,7 @@ func validateTheCacheControl(req *http.Request, resp *http.Response) (validation
 func (r *CacheHandler) roundTripRFCCompliance(req *http.Request) (resp *http.Response, err error) {
 	allowCache := allowedFromCache(req.Header)
 	if allowCache {
-		cachedResp, cachedItem, cachedErr := getCachedResponse(r.CacheInteractor, req)
+		cachedResp, cachedItem, cachedErr := getCachedResponse(r.CacheInteractor, req, r.IsPrivateCache)
 		if cachedResp != nil && cachedErr == nil {
 			buildTheCachedResponseHeader(cachedResp, cachedItem, r.CacheInteractor.Origin())
 			return cachedResp, cachedErr
@@ -112,7 +115,7 @@ func (r *CacheHandler) roundTripRFCCompliance(req *http.Request) (resp *http.Res
 		return
 	}
 
-	validationResult, errValidation := validateTheCacheControl(req, resp)
+	validationResult, errValidation := validateTheCacheControl(req, resp, r.IsPrivateCache)
 	if errValidation != nil {
 		log.Printf("Can't validate the response to RFC 7234, plase check. Err: %v\n", errValidation)
 		return // return directly, not sure can be stored or not
@@ -142,7 +145,7 @@ func (r *CacheHandler) RoundTrip(req *http.Request) (resp *http.Response, err er
 	if r.ComplyRFC {
 		return r.roundTripRFCCompliance(req)
 	}
-	cachedResp, cachedItem, cachedErr := getCachedResponse(r.CacheInteractor, req)
+	cachedResp, cachedItem, cachedErr := getCachedResponse(r.CacheInteractor, req, r.IsPrivateCache)
 	if cachedResp != nil && cachedErr == nil {
 		buildTheCachedResponseHeader(cachedResp, cachedItem, r.CacheInteractor.Origin())
 		return cachedResp, cachedErr
@@ -188,7 +191,7 @@ func storeRespToCache(cacheInteractor cache.ICacheInteractor, req *http.Request,
 	return
 }
 
-func getCachedResponse(cacheInteractor cache.ICacheInteractor, req *http.Request) (
+func getCachedResponse(cacheInteractor cache.ICacheInteractor, req *http.Request, isPrivateCache bool) (
 	resp *http.Response, cachedResp cache.CachedResponse, err error) {
 	cachedResp, err = cacheInteractor.Get(getCacheKey(req))
 	if err != nil {
@@ -201,7 +204,7 @@ func getCachedResponse(cacheInteractor cache.ICacheInteractor, req *http.Request
 		return
 	}
 
-	validationResult, err := validateTheCacheControl(req, resp)
+	validationResult, err := validateTheCacheControl(req, resp, isPrivateCache)
 	if err != nil {
 		return
 	}

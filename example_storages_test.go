@@ -13,7 +13,7 @@ import (
 
 func Example_inMemoryStorageDefault() {
 	client := &http.Client{}
-	handler, err := httpcache.NewWithInmemoryCache(client, true, time.Second*15)
+	handler, err := httpcache.NewWithInmemoryCache(client, true, false, time.Second*15)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func Example_inMemoryStorageDefault() {
 
 func Example_redisStorage() {
 	client := &http.Client{}
-	handler, err := httpcache.NewWithRedisCache(client, true, &redis.CacheOptions{
+	handler, err := httpcache.NewWithRedisCache(client, true, false, &redis.CacheOptions{
 		Addr: "localhost:6379",
 	}, time.Second*15)
 	if err != nil {

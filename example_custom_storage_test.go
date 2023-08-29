@@ -55,7 +55,7 @@ func (c customInMemStorage) Origin() string {
 
 func Example_withCustomStorage() {
 	client := &http.Client{}
-	handler, err := httpcache.NewWithCustomStorageCache(client, true, NewCustomInMemStorage())
+	handler, err := httpcache.NewWithCustomStorageCache(client, true, false, NewCustomInMemStorage())
 	if err != nil {
 		log.Fatal(err)
 	}
