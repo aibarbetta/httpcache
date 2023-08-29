@@ -1,8 +1,8 @@
 package inmem
 
 import (
+	"github.com/aibarbetta/httpcache/cache"
 	memcache "github.com/bxcodec/gotcha/cache"
-	"github.com/bxcodec/httpcache/cache"
 )
 
 type inmemCache struct {

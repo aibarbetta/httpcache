@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bxcodec/httpcache"
-	"github.com/bxcodec/httpcache/cache"
+	"github.com/aibarbetta/httpcache"
+	"github.com/aibarbetta/httpcache/cache"
 	patrickCache "github.com/patrickmn/go-cache"
 )
 

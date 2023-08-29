@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aibarbetta/httpcache/cache"
+	rediscache "github.com/aibarbetta/httpcache/cache/redis"
 	"github.com/alicebob/miniredis"
-	"github.com/bxcodec/httpcache/cache"
-	rediscache "github.com/bxcodec/httpcache/cache/redis"
 	"github.com/go-redis/redis/v8"
 )
 

@@ -26,7 +26,7 @@ import (
 	"testing"
 	"time"
 
-	cacheControl "github.com/bxcodec/httpcache/helper/cacheheader"
+	cacheControl "github.com/aibarbetta/httpcache/helper/cacheheader"
 	"github.com/stretchr/testify/require"
 )
 

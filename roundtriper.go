@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bxcodec/httpcache/cache"
-	cacheControl "github.com/bxcodec/httpcache/helper/cacheheader"
+	"github.com/aibarbetta/httpcache/cache"
+	cacheControl "github.com/aibarbetta/httpcache/helper/cacheheader"
 )
 
 // Headers

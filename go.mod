@@ -1,4 +1,4 @@
-module github.com/bxcodec/httpcache
+module github.com/aibarbetta/httpcache
 
 go 1.19
 

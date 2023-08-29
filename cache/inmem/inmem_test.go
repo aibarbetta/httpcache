@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aibarbetta/httpcache/cache"
+	"github.com/aibarbetta/httpcache/cache/inmem"
 	"github.com/bxcodec/gotcha"
 	inmemcache "github.com/bxcodec/gotcha/cache"
-	"github.com/bxcodec/httpcache/cache"
-	"github.com/bxcodec/httpcache/cache/inmem"
 )
 
 func TestCacheInMemory(t *testing.T) {

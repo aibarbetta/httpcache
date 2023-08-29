@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/httpcache/cache"
+	"github.com/aibarbetta/httpcache/cache"
 	"github.com/go-redis/redis/v8"
 )
 

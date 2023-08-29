@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	cache "github.com/bxcodec/httpcache/cache"
+	cache "github.com/aibarbetta/httpcache/cache"
 	mock "github.com/stretchr/testify/mock"
 )
 

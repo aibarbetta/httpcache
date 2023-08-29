@@ -8,9 +8,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/bxcodec/httpcache"
-	"github.com/bxcodec/httpcache/cache"
-	"github.com/bxcodec/httpcache/mocks"
+	"github.com/aibarbetta/httpcache"
+	"github.com/aibarbetta/httpcache/cache"
+	"github.com/aibarbetta/httpcache/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
